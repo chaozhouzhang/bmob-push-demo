@@ -2,12 +2,15 @@ package cn.bmob.push.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.orhanobut.logger.Logger;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -16,6 +19,8 @@ import cn.bmob.push.R;
 import cn.bmob.v3.BmobInstallation;
 import cn.bmob.v3.BmobPushManager;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobDate;
+import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.PushListener;
 
@@ -23,7 +28,7 @@ import cn.bmob.v3.listener.PushListener;
  * Created on 17/8/24 16:29
  */
 
-public class PushFragment extends Fragment {
+public class PushFragment extends BaseFragment {
     Unbinder unbinder;
 
     @Nullable
@@ -43,42 +48,137 @@ public class PushFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+
     }
 
     @OnClick({R.id.btn_broadcast, R.id.btn_multi_cast_channel, R.id.btn_multi_cast_platform,
-            R.id.btn_multi_cast_location, R.id.btn_multi_cast_active, R.id.btn_multi_cast_query, R.id.btn_uni_cast_android,R.id.btn_uni_cast_ios})
+            R.id.btn_multi_cast_location, R.id.btn_multi_cast_active, R.id.btn_multi_cast_query, R.id.btn_uni_cast_android, R.id.btn_uni_cast_ios})
     public void onViewClicked(View view) {
         BmobPushManager bmobPushManager = new BmobPushManager();
+        BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
         switch (view.getId()) {
-            case R.id.btn_broadcast:
-                bmobPushManager.pushMessageAll("有listener的测试", new PushListener() {
+            case R.id.btn_broadcast://OK
+                bmobPushManager.pushMessageAll("消息内容", new PushListener() {
                     @Override
                     public void done(BmobException e) {
-                        Logger.e("异常：" + e.getMessage());
+                        if (e == null) {
+                            Logger.e("推送成功！");
+                        } else {
+                            Logger.e("异常：" + e.getMessage());
+                        }
                     }
                 });
                 break;
             case R.id.btn_multi_cast_channel:
-
+                List<String> channels = new ArrayList<>();
+                //TODO 替换成你需要推送的所有频道，推送前请确认已有设备订阅了该频道
+                //TODO 此功能存在bug，请等待下个版本的数据SDK解决bug
+                channels.add("Giants");
+                query.addWhereEqualTo("channels", channels);
+                bmobPushManager.setQuery(query);
+                bmobPushManager.pushMessage("消息内容", new PushListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Logger.e("推送成功！");
+                        } else {
+                            Logger.e("异常：" + e.getMessage());
+                        }
+                    }
+                });
                 break;
-            case R.id.btn_multi_cast_platform:
+            case R.id.btn_multi_cast_platform://OK
+                //TODO 属性值为android或者ios
+                query.addWhereEqualTo("deviceType", "android");
+                //query.addWhereEqualTo("deviceType", "ios");
+                bmobPushManager.setQuery(query);
+                bmobPushManager.pushMessage("消息内容", new PushListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Logger.e("推送成功！");
+                        } else {
+                            Logger.e("异常：" + e.getMessage());
+                        }
+                    }
+                });
                 break;
-            case R.id.btn_multi_cast_location:
+            case R.id.btn_multi_cast_location://OK
+                //TODO 替换你需要推送的地理位置的经纬度和范围，发送前请确认installation表中已有location的BmobGeoPoint类型属性
+                query.addWhereWithinRadians("location", new BmobGeoPoint(113.385610000, 23.0561000000), 1.0);
+                bmobPushManager.setQuery(query);
+                bmobPushManager.pushMessage("消息内容", new PushListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Logger.e("推送成功！");
+                        } else {
+                            Logger.e("异常：" + e.getMessage());
+                        }
+                    }
+                });
                 break;
-            case R.id.btn_multi_cast_active:
+            case R.id.btn_multi_cast_active://OK
+                //TODO 替换你需要的判断为不活跃的时间点
+                query.addWhereLessThan("updatedAt", new BmobDate(new Date()));
+                bmobPushManager.setQuery(query);
+                bmobPushManager.pushMessage("消息内容", new PushListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Logger.e("推送成功！");
+                        } else {
+                            Logger.e("异常：" + e.getMessage());
+                        }
+                    }
+                });
                 break;
-            case R.id.btn_multi_cast_query:
+            case R.id.btn_multi_cast_query://OK
+                //TODO 替换成你作为判断需要推送的属性名和属性值，推送前请确认installation表已有该属性
+                query.addWhereEqualTo("", "");
+                bmobPushManager.setQuery(query);
+                bmobPushManager.pushMessage("消息内容", new PushListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Logger.e("推送成功！");
+                        } else {
+                            Logger.e("异常：" + e.getMessage());
+                        }
+                    }
+                });
                 break;
-            case R.id.btn_uni_cast_android:
-                String installationId = "其他客户端installationId";
-                BmobPushManager bmobPush = new BmobPushManager();
-                BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
+            case R.id.btn_uni_cast_android://OK
+                //TODO 替换成所需要推送的Android客户端installationId
+                String installationId = "";
                 query.addWhereEqualTo("installationId", installationId);
-                bmobPush.setQuery(query);
-                bmobPush.pushMessage("消息内容");
-
+                bmobPushManager.setQuery(query);
+                bmobPushManager.pushMessage("消息内容", new PushListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Logger.e("推送成功！");
+                        } else {
+                            Logger.e("异常：" + e.getMessage());
+                        }
+                    }
+                });
                 break;
-            case R.id.btn_uni_cast_ios:
+            case R.id.btn_uni_cast_ios://OK
+                //TODO 替换成所需要推送的iOS客户端deviceToken
+                String deviceToken = "";
+                query.addWhereEqualTo("deviceToken", deviceToken);
+                bmobPushManager.setQuery(query);
+                bmobPushManager.pushMessage("消息内容", new PushListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Logger.e("推送成功！");
+                        } else {
+                            Logger.e("异常：" + e.getMessage());
+                        }
+                    }
+                });
                 break;
         }
     }
