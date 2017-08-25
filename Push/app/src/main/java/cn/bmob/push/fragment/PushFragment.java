@@ -71,8 +71,7 @@ public class PushFragment extends BaseFragment {
                 break;
             case R.id.btn_multi_cast_channel:
                 List<String> channels = new ArrayList<>();
-                //TODO 替换成你需要推送的所有频道，推送前请确认已有设备订阅了该频道
-                //TODO 此功能存在bug，请等待下个版本的数据SDK解决bug
+                //TODO 替换成你需要推送的所有频道，推送前请确认已有设备订阅了该频道，也就是channels属性存在该值
                 channels.add("Giants");
                 query.addWhereEqualTo("channels", channels);
                 bmobPushManager.setQuery(query);
@@ -113,6 +112,7 @@ public class PushFragment extends BaseFragment {
                         if (e == null) {
                             Logger.e("推送成功！");
                         } else {
+                            Logger.e("发送前请确认installation表中已有location的BmobGeoPoint类型属性");
                             Logger.e("异常：" + e.getMessage());
                         }
                     }
@@ -135,7 +135,7 @@ public class PushFragment extends BaseFragment {
                 break;
             case R.id.btn_multi_cast_query://OK
                 //TODO 替换成你作为判断需要推送的属性名和属性值，推送前请确认installation表已有该属性
-                query.addWhereEqualTo("", "");
+                query.addWhereEqualTo("替换成你作为判断需要推送的属性名", "替换成你作为判断需要推送的属性值");
                 bmobPushManager.setQuery(query);
                 bmobPushManager.pushMessage("消息内容", new PushListener() {
                     @Override
@@ -150,7 +150,7 @@ public class PushFragment extends BaseFragment {
                 break;
             case R.id.btn_uni_cast_android://OK
                 //TODO 替换成所需要推送的Android客户端installationId
-                String installationId = "";
+                String installationId = "替换成所需要推送的Android客户端installationId";
                 query.addWhereEqualTo("installationId", installationId);
                 bmobPushManager.setQuery(query);
                 bmobPushManager.pushMessage("消息内容", new PushListener() {
