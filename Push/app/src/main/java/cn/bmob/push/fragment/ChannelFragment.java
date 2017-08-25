@@ -50,10 +50,6 @@ public class ChannelFragment extends BaseFragment {
 
         switch (view.getId()) {
             case R.id.btn_subscribe:
-                /**
-                 * TODO 此处是SDK的bug，所获取的不是当前的设备信息，需等待数据SDK下个版本修复bug，或者自己操作Installation表解决。
-                 * TODO 实现思路：先根据当前installationId查询线上installation数据，再对channel字段的数值进行增删查，订阅一个频道就是给channel数组增加一个数值，退订一个频道就是减少一个数值，查询频道就是查询这个数组，请注意在增加数值的时候需要做数值过滤，以防订阅了多个相同的频道。
-                 */
                 BmobInstallation bmobInstallationSub = BmobInstallation.getCurrentInstallation();
                 bmobInstallationSub.subscribe("NBA");
                 bmobInstallationSub.subscribe("CBA");
@@ -71,10 +67,6 @@ public class ChannelFragment extends BaseFragment {
                         });
                 break;
             case R.id.btn_unsubscribe:
-                /**
-                 * TODO 此处是SDK的bug，所获取的不是当前的设备信息，需等待数据SDK下个版本修复bug，或者自己操作Installation表解决。
-                 * TODO 实现思路：先根据当前installationId查询线上installation数据，再对channel字段的数值进行增删查，订阅一个频道就是给channel数组增加一个数值，退订一个频道就是减少一个数值，查询频道就是查询这个数组，请注意在增加数值的时候需要做数值过滤，以防订阅了多个相同的频道。
-                 */
                 BmobInstallation bmobInstallationUnSub = BmobInstallation.getCurrentInstallation();
                 bmobInstallationUnSub.unsubscribe("NBA");
                 bmobInstallationUnSub.unsubscribe("CBA");
@@ -92,10 +84,6 @@ public class ChannelFragment extends BaseFragment {
                         });
                 break;
             case R.id.btn_channels:
-                /**
-                 * TODO 此处是SDK的bug，所获取的不是当前的设备信息，需等待数据SDK下个版本修复bug，或者自己操作Installation表解决。
-                 * TODO 实现思路：先根据当前installationId查询线上installation数据，再对channel字段的数值进行增删查，订阅一个频道就是给channel数组增加一个数值，退订一个频道就是减少一个数值，查询频道就是查询这个数组，请注意在增加数值的时候需要做数值过滤，以防订阅了多个相同的频道。
-                 */
                 BmobInstallation bmobInstallation = BmobInstallation.getCurrentInstallation();
                 List<String> channels = bmobInstallation.getChannels();
                 if (channels.size() < 1) {
