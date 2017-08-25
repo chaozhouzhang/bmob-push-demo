@@ -1,22 +1,32 @@
 ## 1、BmobPush SDK 简介
-推送是让用户及时被通知、和你的应用保持联系的一种非常棒的方式，你可以快速而有效地通知到所有的用户，下面这个教程将会教你如何使用BmobPush SDK来推送消息。
+推送是让用户及时被通知、和你的应用保持联系的一种非常棒的方式，你可以快速而有效地通知到所有的用户，下面这个教程将会教你如何使用BmobPush SDK来推送消息。请确保您在使用BmobPush SDK之前已经了解此文档，如有疑问请加Push使用交流群[182897507]()咨询。
 
 ## 2、BmobPush SDK 集成
 
 ### 2.1、下载BmobPush SDK
-在Bmob官方网站的下载界面中，选择下载[Android推送SDK](https://www.bmob.cn/downloads)，将下载的zip压缩包进行解压，得到`Bmob_Push_v(版本号)_日期.jar`，然后将它放在你项目根目录下的"libs"目录中，[可参考案例](https://github.com/chaozhouzhang/bmob-push-demo)。
+在Bmob官方网站的下载界面中，选择下载[Android推送SDK](https://www.bmob.cn/downloads)，将下载的zip压缩包进行解压，得到`Bmob_Push_v(版本号)_日期.jar`，然后将它放在你项目根目录下的"libs"目录中，并集成[数据SDK](https://docs.bmob.cn/data/Android/a_faststart/doc/index.html)，[可参考案例](https://github.com/chaozhouzhang/bmob-push-demo)。
 
 ### 2.2、配置AndroidManifest.xml
 #### 2.2.1、在您的应用程序AndroidManifest.xml文件中添加相应的权限
 请注意在Android 6.0版本开始某些权限需要动态获取，详情请看Android Developwers官方文档，[android-6.0-changes](http://developer.android.com/intl/zh-cn/about/versions/marshmallow/android-6.0-changes.html)和[android-7.0-changes](https://developer.android.google.cn/about/versions/nougat/android-7.0-changes.html)。
 
 ```xml
-	<!--BmobSDK所需的权限 -->
+    <!--TODO 集成：1.1、添加数据SDK和推送SDK需要的权限-->
+    <!--比目数据SDK所需的权限-->
+    <!--允许联网 -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!--获取GSM（2g）、WCDMA（联通3g）等网络状态的信息  -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--获取wifi网络状态的信息 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--保持CPU 运转，屏幕和键盘灯有可能是关闭的,用于文件上传和下载 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!--获取sd卡写的权限，用于文件上传和下载-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--允许读取手机状态 用于创建BmobInstallation-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+
     <!--推送所需的权限-->
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -25,6 +35,7 @@
 #### 2.2.2、在您的应用程序AndroidManifest.xml文件中注册BmobPush SDK运行所需的推送服务和消息接收器
 
 ```xml
+  <!--TODO 集成：1.2、添加推送所需要的服务和广播-->
 	<service
 	    android:label="PushService"
 		android:name="cn.bmob.push.lib.service.PushService"
@@ -52,7 +63,7 @@
 	    </intent-filter>
 	</receiver>
 
-	<!-- 第四部中创建的消息接收器，在这里进行注册 -->
+	<!-- 第3步中创建的消息接收器，在这里进行注册 -->
 	<receiver android:name="your.package.MyPushMessageReceiver">
 	     <intent-filter >
 	          <action android:name="cn.bmob.push.action.MESSAGE"/>
@@ -79,6 +90,7 @@ Push消息通过`action=cn.bmob.push.action.MESSAGE`的Intent把数据发送给�
 `your.package.MyPushMessageReceiver`的代码示例如下：
 
 ```java
+//TODO 集成：1.3、创建自定义的推送消息接收器，并在清单文件中注册
 public class MyPushMessageReceiver extends BroadcastReceiver{
 
 	@Override
@@ -97,14 +109,15 @@ public class MyPushMessageReceiver extends BroadcastReceiver{
 在你的应用程序主Application中调用如下方法：
 
 ```java
+//TODO 集成：1.4、初始化数据服务SDK、保存设备信息并启动推送服务
 // 初始化BmobSDK
-Bmob.initialize(this, "你的AppKey");
+Bmob.initialize(this, "你的Application Id");
 // 使用推送服务时的初始化操作
 BmobInstallation.getCurrentInstallation().save();
 // 启动推送服务
 BmobPush.startWork(this);
 ```
-代码中的"你的Application Id"就是你在Bmob后台中创建的应用程序的Application Id，如果你不知道这是什么，可以参考[快速入门文档](https://docs.bmob.cn/android/faststart/index.html?menukey=fast_start&key=start_android "Android快速入门")中的注册Bmob账号部分。
+代码中的"你的Application Id"就是你在Bmob后台中创建的应用程序的Application Id，如果你不知道这是什么，可以参考[快速入门文档](https://docs.bmob.cn/data/Android/a_faststart/doc/index.html)中的注册Bmob账号部分。
 
 ## 3、控制台推送消息给客户端
 ### 3.1、推送设置
@@ -280,93 +293,175 @@ installation.unsubscribe("Giants");
 installation.save();
 ```
 
-## 4.4、广播推送消息
-在客户端实现推送消息的功能，通过 **BmobPushManager** 对象来完成，比如给所有设备推送一条消息，如下：
+## 4.4、客户端广播推送消息
+在客户端实现推送消息的功能，通过 **BmobPushManager** 对象来完成，比如给所有设备推送消息：
 ```java
-BmobPushManager bmobPush = new BmobPushManager();
-bmobPush.pushMessageAll("Hello Bmob.");
+    BmobPushManager bmobPushManager = new BmobPushManager();
+    bmobPushManager.pushMessageAll("消息内容", new PushListener() {
+        @Override
+        public void done(BmobException e) {
+            if (e==null){
+                Logger.e("推送成功！");
+            }else {
+                Logger.e("异常：" + e.getMessage());
+            }
+        }
+    });
 ```
 
-## 4.5、组播推送消息
-推送消息给订阅了Giants频道的用户
-```java
-BmobPushManager bmobPush = new BmobPushManager();
-BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
-List<String> channels = new ArrayList<String>();
-channels.add("Giants");
-		
-query.addWhereEqualTo("channels", channels);
-bmobPush.setQuery(query);
-bmobPush.pushMessage("消息内容");
-```
-同时发送消息给多个频道时，可以将其他频道添加在channels中。
+## 4.5、客户端组播推送消息
 
-## 4.6、多播推送消息
-
-### 4.6.1、推送消息给不活跃的用户
 ```java
-BmobPushManager bmobPush = new BmobPushManager();
-BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
-query.addWhereLessThan("updatedAt", new BmobDate(new Date()));
-bmobPush.setQuery(query);
-bmobPush.pushMessage("消息内容");
+                BmobPushManager bmobPushManager = new BmobPushManager();
+                BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
+                List<String> channels = new ArrayList<>();
+                //TODO 替换成你需要推送的所有频道，推送前请确认已有设备订阅了该频道，也就是channels属性存在该值
+                channels.add("Giants");
+                query.addWhereEqualTo("channels", channels);
+                bmobPushManager.setQuery(query);
+                bmobPushManager.pushMessage("消息内容", new PushListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Logger.e("推送成功！");
+                        } else {
+                            Logger.e("异常：" + e.getMessage());
+                        }
+                    }
+                });
 ```
 
-### 4.6.2、根据查询条件做推送
+## 4.6、客户端多播推送消息
+### 4.6.1、根据平台做推送
+给Android平台的终端推送：
 ```java
-BmobPushManager bmobPush = new BmobPushManager();
-BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
-query.addWhereEqualTo("score", 80);
-bmobPush.setQuery(query);
-bmobPush.pushMessage("消息内容");
+                BmobPushManager bmobPushManager = new BmobPushManager();
+                BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
+                //TODO 属性值为android
+                query.addWhereEqualTo("deviceType", "android");
+                bmobPushManager.setQuery(query);
+                bmobPushManager.pushMessage("消息内容", new PushListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Logger.e("推送成功！");
+                        } else {
+                            Logger.e("异常：" + e.getMessage());
+                        }
+                    }
+                });
 ```
-请注意，where 条件查询的都是 installations 表。这里是假设 installations 表存储了 score 的Number属性，你可以像查询普通对象一样构造where查询
+给IOS平台的终端推送：
+```java
+                BmobPushManager bmobPushManager = new BmobPushManager();
+                BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
+                //TODO 属性值为ios
+                query.addWhereEqualTo("deviceType", "ios");
+                bmobPushManager.setQuery(query);
+                bmobPushManager.pushMessage("消息内容", new PushListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Logger.e("推送成功！");
+                        } else {
+                            Logger.e("异常：" + e.getMessage());
+                        }
+                    }
+                });
+```
 
-### 4.6.3、根据平台做推送
-给Android平台的终端推送
+### 4.6.2、根据地理位置信息推送
 ```java
-BmobPushManager bmobPush = new BmobPushManager();
-BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
-query.addWhereEqualTo("deviceType", "android");
-bmobPush.setQuery(query);
-bmobPush.pushMessage("消息内容");
-```
-给IOS平台的终端推送
-```java
-BmobPushManager bmobPush = new BmobPushManager();
-BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
-query.addWhereEqualTo("deviceType", "ios");
-bmobPush.setQuery(query);
-bmobPush.pushMessage("消息内容");
+                BmobPushManager bmobPushManager = new BmobPushManager();
+                BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
+                //TODO 替换你需要推送的地理位置的经纬度和范围，发送前请确认installation表中已有location的BmobGeoPoint类型属性
+                query.addWhereWithinRadians("location", new BmobGeoPoint(113.385610000, 23.0561000000), 1.0);
+                bmobPushManager.setQuery(query);
+                bmobPushManager.pushMessage("消息内容", new PushListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Logger.e("推送成功！");
+                        } else {
+                            Logger.e("发送前请确认installation表中已有location的BmobGeoPoint类型属性");
+                            Logger.e("异常：" + e.getMessage());
+                        }
+                    }
+                });
 ```
 
-### 4.6.4、根据地理位置信息做推送
+### 4.6.3、推送消息给不活跃的设备
 ```java
-BmobPushManager bmobPush = new BmobPushManager();
-BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
-query.addWhereWithinRadians("location", new BmobGeoPoint(112.934755, 24.52065), 1.0);
-bmobPush.setQuery(query);
-bmobPush.pushMessage("消息内容");
+                BmobPushManager bmobPushManager = new BmobPushManager();
+                BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
+                //TODO 替换你需要的判断为不活跃的时间点
+                query.addWhereLessThan("updatedAt", new BmobDate(new Date()));
+                bmobPushManager.setQuery(query);
+                bmobPushManager.pushMessage("消息内容", new PushListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Logger.e("推送成功！");
+                        } else {
+                            Logger.e("异常：" + e.getMessage());
+                        }
+                    }
+                });
 ```
-上面的例子假设 installation 表中有个 location 属性是 GeoPoint 类型，我们就可以根据地理信息位置做推送。
+### 4.6.4、根据查询条件做推送
+```java
+               //TODO 替换成你作为判断需要推送的属性名和属性值，推送前请确认installation表已有该属性
+                query.addWhereEqualTo("替换成你作为判断需要推送的属性名", "替换成你作为判断需要推送的属性值");
+                bmobPushManager.setQuery(query);
+                bmobPushManager.pushMessage("消息内容", new PushListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Logger.e("推送成功！");
+                        } else {
+                            Logger.e("异常：" + e.getMessage());
+                        }
+                    }
+                });
+```
 
-## 4.7、点播推送消息
-发送给Android单个客户端
+## 4.7、客户端点播推送消息
+发送给Android单个客户端：
 ```java
-String installationId = "客户端installationId";
-BmobPushManager bmobPush = new BmobPushManager();
-BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
-query.addWhereEqualTo("installationId", installationId);
-bmobPush.setQuery(query);
-bmobPush.pushMessage("消息内容");
+                //TODO 替换成所需要推送的Android客户端installationId
+                BmobPushManager bmobPushManager = new BmobPushManager();
+                BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
+                String installationId = "【替换你需要的id】其他Android客户端installationId";
+                query.addWhereEqualTo("installationId", installationId);
+                bmobPushManager.setQuery(query);
+                bmobPushManager.pushMessage("消息内容", new PushListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Logger.e("推送成功！");
+                        } else {
+                            Logger.e("异常：" + e.getMessage());
+                        }
+                    }
+                });
 ```
-发送给iOS单个客户端
+发送给iOS单个客户端：
 ```java
-String deviceToken = "客户端deviceToken";
-BmobPushManager bmobPush = new BmobPushManager();
-BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
-query.addWhereEqualTo("deviceToken", deviceToken);
-bmobPush.setQuery(query);
-bmobPush.pushMessage("消息内容");
+                //TODO 替换成所需要推送的iOS客户端deviceToken
+                BmobPushManager bmobPushManager = new BmobPushManager();
+                BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
+                String deviceToken = "替换成所需要推送的iOS客户端deviceToken";
+                query.addWhereEqualTo("deviceToken", deviceToken);
+                bmobPushManager.setQuery(query);
+                bmobPushManager.pushMessage("消息内容", new PushListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Logger.e("推送成功！");
+                        } else {
+                            Logger.e("异常：" + e.getMessage());
+                        }
+                    }
+                });
 ```
 
