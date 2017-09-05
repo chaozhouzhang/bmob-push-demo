@@ -16,7 +16,7 @@ import cn.bmob.push.R;
 import cn.bmob.push.bean.Installation;
 import cn.bmob.push.bean.User;
 import cn.bmob.push.ui.LoginActivity;
-import cn.bmob.v3.BmobInstallation;
+import cn.bmob.v3.BmobInstallationManager;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import rx.functions.Action1;
@@ -59,7 +59,7 @@ public class IntegrationFragment extends BaseFragment {
      */
     private void modifyInstallationUser() {
         BmobQuery<Installation> bmobQuery = new BmobQuery<>();
-        final String id = BmobInstallation.getInstallationId(getContext());
+        final String id = BmobInstallationManager.getInstallationId();
         bmobQuery.addWhereEqualTo("installationId", id);
         bmobQuery.findObjectsObservable(Installation.class)
                 .subscribe(new Action1<List<Installation>>() {

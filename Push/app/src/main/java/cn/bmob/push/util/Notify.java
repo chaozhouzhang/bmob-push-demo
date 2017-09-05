@@ -8,6 +8,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
+import org.json.JSONObject;
+
+import cn.bmob.v3.AsyncCustomEndpoints;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.CloudCodeListener;
+
 /**
  * Created on 17/6/21 15:34
  */
@@ -101,6 +107,14 @@ public class Notify {
 
     public Notify setAutoCancel(Boolean autoCancel) {
         mAutoCancel = autoCancel;
+        AsyncCustomEndpoints asyncCustomEndpoints = new AsyncCustomEndpoints();
+
+        asyncCustomEndpoints.callEndpoint("", new JSONObject(), new CloudCodeListener() {
+            @Override
+            public void done(Object o, BmobException e) {
+
+            }
+        });
         return this;
     }
 
@@ -134,7 +148,7 @@ public class Notify {
             builder.setSubText(getSubText());
         if (getPendingIntent() != null)
             builder.setContentIntent(getPendingIntent());
-        if (getAutoCancel()!=null&&getAutoCancel())
+        if (getAutoCancel() != null && getAutoCancel())
             builder.setAutoCancel(getAutoCancel());
         if (getSound() != null)
             builder.setSound(getSound());

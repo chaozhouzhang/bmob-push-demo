@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -15,7 +16,9 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.bmob.push.R;
 import cn.bmob.v3.BmobInstallation;
-import rx.functions.Action1;
+import cn.bmob.v3.BmobInstallationManager;
+import cn.bmob.v3.InstallationListener;
+import cn.bmob.v3.exception.BmobException;
 
 /**
  * Created on 17/8/24 16:29
@@ -50,46 +53,36 @@ public class ChannelFragment extends BaseFragment {
 
         switch (view.getId()) {
             case R.id.btn_subscribe:
-                BmobInstallation bmobInstallationSub = BmobInstallation.getCurrentInstallation();
-                bmobInstallationSub.subscribe("NBA");
-                bmobInstallationSub.subscribe("CBA");
-                bmobInstallationSub.saveObservable()
-                        .subscribe(new Action1<String>() {
-                            @Override
-                            public void call(String s) {
-                                toastI("订阅频道成功：" + s);
-                            }
-                        }, new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                toastE("订阅频道失败：" + throwable.getMessage());
-                            }
-                        });
+                BmobInstallationManager.getInstance().subscribe(Arrays.asList("NBA", "CBA", "IJK", "NBA", "CBA", "USA"), new InstallationListener<BmobInstallation>() {
+                    @Override
+                    public void done(BmobInstallation bmobInstallation, BmobException e) {
+                        if (e == null) {
+                            toastI("批量订阅成功");
+                        } else {
+                            toastE(e.getMessage());
+                        }
+                    }
+                });
                 break;
             case R.id.btn_unsubscribe:
-                BmobInstallation bmobInstallationUnSub = BmobInstallation.getCurrentInstallation();
-                bmobInstallationUnSub.unsubscribe("NBA");
-                bmobInstallationUnSub.unsubscribe("CBA");
-                bmobInstallationUnSub.saveObservable()
-                        .subscribe(new Action1<String>() {
-                            @Override
-                            public void call(String s) {
-                                toastI("退订频道成功：" + s);
-                            }
-                        }, new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                toastE("退订频道失败：" + throwable.getMessage());
-                            }
-                        });
+
+                BmobInstallationManager.getInstance().unsubscribe(Arrays.asList("CBA", "USA"), new InstallationListener<BmobInstallation>() {
+                    @Override
+                    public void done(BmobInstallation bmobInstallation, BmobException e) {
+                        if (e == null) {
+                            toastI("批量取消订阅成功");
+                        } else {
+                            toastE(e.getMessage());
+                        }
+                    }
+                });
                 break;
             case R.id.btn_channels:
-                BmobInstallation bmobInstallation = BmobInstallation.getCurrentInstallation();
+                BmobInstallation bmobInstallation = BmobInstallationManager.getInstance().getCurrentInstallation();
                 List<String> channels = bmobInstallation.getChannels();
                 if (channels.size() < 1) {
                     toastI("您没有订阅任何频道！");
                 } else {
-
                     for (String channel : channels) {
                         mTvChannel.append(channel + "\n");
                     }

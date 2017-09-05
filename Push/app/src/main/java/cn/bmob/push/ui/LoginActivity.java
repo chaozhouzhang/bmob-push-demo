@@ -18,7 +18,7 @@ import butterknife.OnClick;
 import cn.bmob.push.R;
 import cn.bmob.push.bean.Installation;
 import cn.bmob.push.bean.User;
-import cn.bmob.v3.BmobInstallation;
+import cn.bmob.v3.BmobInstallationManager;
 import cn.bmob.v3.BmobQuery;
 import rx.functions.Action1;
 
@@ -103,7 +103,7 @@ public class LoginActivity extends BaseActivity {
      */
     private void modifyInstallationUser(final User user) {
         BmobQuery<Installation> bmobQuery = new BmobQuery<>();
-        final String id = BmobInstallation.getInstallationId(mContext);
+        final String id = BmobInstallationManager.getInstallationId();
         bmobQuery.addWhereEqualTo("installationId", id);
         bmobQuery.findObjectsObservable(Installation.class)
                 .subscribe(new Action1<List<Installation>>() {
