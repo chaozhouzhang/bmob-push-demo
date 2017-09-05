@@ -18,5 +18,4 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing account
         completions."
     </string>
-    <string name="flash">Flash</string>
 </resources>
