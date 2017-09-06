@@ -34,6 +34,7 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'com.orhanobut:logger:2.1.1'
 
+    //Bmob的数据服务SDK
     compile 'cn.bmob.android:bmob-sdk:3.5.7'
 
 }
