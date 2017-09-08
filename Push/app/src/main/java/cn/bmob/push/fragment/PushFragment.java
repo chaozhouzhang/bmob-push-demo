@@ -48,8 +48,9 @@ public class PushFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-
     }
+
+
 
     @OnClick({R.id.btn_broadcast, R.id.btn_multi_cast_channel, R.id.btn_multi_cast_platform,
             R.id.btn_multi_cast_location, R.id.btn_multi_cast_active, R.id.btn_multi_cast_query, R.id.btn_uni_cast_android, R.id.btn_uni_cast_ios})

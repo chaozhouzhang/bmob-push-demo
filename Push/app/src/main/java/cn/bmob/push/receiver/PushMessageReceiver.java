@@ -20,6 +20,7 @@ public class PushMessageReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
         String msg = intent.getStringExtra("msg");
         if (intent.getAction().equals(PushConstants.ACTION_MESSAGE)) {
             Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();

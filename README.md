@@ -1,5 +1,5 @@
 ## 1、BmobPush SDK 简介
-推送是让用户及时被通知、和你的应用保持联系的一种非常棒的方式，你可以快速而有效地通知到所有的用户，下面这个教程将会教你如何使用BmobPush SDK来推送消息。请确保您在使用BmobPush SDK之前已经了解此文档，如有疑问请加Push使用交流群[182897507]()咨询。
+推送能够让你和你的应用保持联系，你可以快速而有效地通知到所有的用户，下面这个教程将会教你如何使用BmobPush SDK来推送消息。请确保您在使用BmobPush SDK之前已经了解此文档，如有疑问请加Push使用交流群[182897507]()咨询。
 
 ## 2、BmobPush SDK 集成
 
@@ -7,9 +7,11 @@
 
 | SDK或Demo     | 下载地址          |
 |------------------------------|--------------------------------|
-| 消息推送 SDK| [https://www.bmob.cn/downloads](https://www.bmob.cn/downloads)，下载后解压，将`Bmob_Push_v(版本号)_日期.jar`放置于项目的"libs"文件夹中。|  
-| 数据服务 SDK| 使用最新版本v3.5.7，集成方式请见下方的自动集成方式。|
+| 数据服务 SDK| 使用最新版本v3.5.7，集成方式请见下方的自动集成方式。手动集成下载地址：[https://www.bmob.cn/downloads](https://www.bmob.cn/downloads)|
+| 消息推送 SDK| 使用最新版本v1.0.1，集成方式请见下方的自动集成方式。手动集成下载地址：[https://www.bmob.cn/downloads](https://www.bmob.cn/downloads)|  
 | 消息推送 Demo| [https://github.com/chaozhouzhang/bmob-push-demo](https://github.com/chaozhouzhang/bmob-push-demo)|
+
+自动集成方式：
 
 1、配置project下的build.gradle文件：
 ```gradle
@@ -26,6 +28,8 @@ allprojects {
 dependencies {
     //Bmob的数据服务SDK
     compile 'cn.bmob.android:bmob-sdk:3.5.7'
+    //Bmob的消息推送SDK
+    compile 'cn.bmob.android:bmob-push:1.0.1'
 }
 ```
 ### 2.2、配置AndroidManifest.xml
@@ -370,6 +374,9 @@ BmobInstallation bmobInstallation = BmobInstallationManager.getInstance().getCur
 ```
 
 ## 4.4、客户端广播推送消息
+
+和控制台推送消息给客户端一样，在客户端推送消息也需要进行推送的包名设置，请在应用面板-->消息推送-->推送设置界面中填写包名进行保存。
+
 在客户端实现推送消息的功能，通过 **BmobPushManager** 对象来完成，比如给所有设备推送消息：
 ```java
     BmobPushManager bmobPushManager = new BmobPushManager();
