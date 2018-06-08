@@ -74,8 +74,8 @@ public class PushFragment extends BaseFragment {
                 List<String> channels = new ArrayList<>();
                 //TODO 替换成你需要推送的所有频道，推送前请确认已有设备订阅了该频道，也就是channels属性存在该值
                 channels.add("NBA");
-                bmobPushManager.setQuery(query);
                 query.addWhereContainedIn("channels", channels);
+                bmobPushManager.setQuery(query);
                 bmobPushManager.pushMessage("消息内容", new PushListener() {
                     @Override
                     public void done(BmobException e) {

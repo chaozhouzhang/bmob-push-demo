@@ -53,7 +53,7 @@ public class ChannelFragment extends BaseFragment {
 
         switch (view.getId()) {
             case R.id.btn_subscribe:
-                BmobInstallationManager.getInstance().subscribe(Arrays.asList("NBA", "CBA", "IJK", "NBA", "CBA", "USA"), new InstallationListener<BmobInstallation>() {
+                BmobInstallationManager.getInstance().subscribe(Arrays.asList("NBA", "CBA", "NCAA", "NBA", "CBA"), new InstallationListener<BmobInstallation>() {
                     @Override
                     public void done(BmobInstallation bmobInstallation, BmobException e) {
                         if (e == null) {
@@ -66,7 +66,7 @@ public class ChannelFragment extends BaseFragment {
                 break;
             case R.id.btn_unsubscribe:
 
-                BmobInstallationManager.getInstance().unsubscribe(Arrays.asList("CBA", "USA"), new InstallationListener<BmobInstallation>() {
+                BmobInstallationManager.getInstance().unsubscribe(Arrays.asList("CBA", "NCAA"), new InstallationListener<BmobInstallation>() {
                     @Override
                     public void done(BmobInstallation bmobInstallation, BmobException e) {
                         if (e == null) {
