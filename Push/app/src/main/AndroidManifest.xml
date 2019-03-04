@@ -97,6 +97,13 @@
                 <action android:name="cn.bmob.push.action.NOTIFY" />
             </intent-filter>
         </receiver>
+
+
+        <provider
+            android:name="cn.bmob.v3.util.BmobContentProvider"
+            android:authorities="cn.bmob.push.BmobContentProvider">
+        </provider>
+
     </application>
 
 </manifest>

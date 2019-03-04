@@ -20,7 +20,9 @@ import cn.bmob.push.bean.Installation;
 import cn.bmob.push.bean.User;
 import cn.bmob.v3.BmobInstallationManager;
 import cn.bmob.v3.BmobQuery;
-import rx.functions.Action1;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * A login screen that offers login via account/password.
@@ -63,17 +65,28 @@ public class LoginActivity extends BaseActivity {
                 user.setPassword(password);
                 Logger.i(account + "\n" + password);
                 user.loginObservable(User.class)
-                        .subscribe(new Action1<User>() {
+                        .subscribe(new Observer<User>() {
                             @Override
-                            public void call(User user) {
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(User user) {
+
                                 startActivity(new Intent(mContext, MainActivity.class));
                                 toastI("登录成功！");
                                 modifyInstallationUser(user);
                             }
-                        }, new Action1<Throwable>() {
+
                             @Override
-                            public void call(Throwable throwable) {
-                                toastE("登录异常：" + throwable.getMessage());
+                            public void onError(Throwable e) {
+                                toastE("登录异常：" + e.getMessage());
+                            }
+
+                            @Override
+                            public void onComplete() {
+
                             }
                         });
                 break;
@@ -81,15 +94,17 @@ public class LoginActivity extends BaseActivity {
                 user.setUsername(account);
                 user.setPassword(password);
                 user.signUpObservable(User.class)
-                        .subscribe(new Action1<User>() {
+                        .subscribe(new Consumer<User>() {
                             @Override
-                            public void call(User user) {
+                            public void accept(User user) throws Exception {
+
                                 startActivity(new Intent(mContext, MainActivity.class));
                                 toastI("注册成功！");
                             }
-                        }, new Action1<Throwable>() {
+                        }, new Consumer<Throwable>() {
                             @Override
-                            public void call(Throwable throwable) {
+                            public void accept(Throwable throwable) throws Exception {
+
                                 toastE("注册异常：" + throwable.getMessage());
                             }
                         });
@@ -111,35 +126,53 @@ public class LoginActivity extends BaseActivity {
         final String id = BmobInstallationManager.getInstallationId();
         bmobQuery.addWhereEqualTo("installationId", id);
         bmobQuery.findObjectsObservable(Installation.class)
-                .subscribe(new Action1<List<Installation>>() {
+                .subscribe(new Observer<List<Installation>>() {
                     @Override
-                    public void call(List<Installation> installations) {
+                    public void onSubscribe(Disposable d) {
 
+                    }
+
+                    @Override
+                    public void onNext(List<Installation> installations) {
                         if (installations.size() > 0) {
                             Installation installation = installations.get(0);
                             installation.setUser(user);
                             installation.updateObservable()
-                                    .subscribe(new Action1<Void>() {
+                                    .subscribe(new Observer<Void>() {
                                         @Override
-                                        public void call(Void aVoid) {
+                                        public void onSubscribe(Disposable d) {
+
+                                        }
+
+                                        @Override
+                                        public void onNext(Void aVoid) {
                                             toastI("更新设备用户信息成功！");
                                         }
-                                    }, new Action1<Throwable>() {
+
                                         @Override
-                                        public void call(Throwable throwable) {
-                                            toastE("更新设备用户信息失败：" + throwable.getMessage());
+                                        public void onError(Throwable e) {
+                                            toastE("更新设备用户信息失败：" + e.getMessage());
+                                        }
+
+                                        @Override
+                                        public void onComplete() {
+
                                         }
                                     });
 
                         } else {
                             toastE("后台不存在此设备Id的数据，请确认此设备Id是否正确！\n" + id);
                         }
-
                     }
-                }, new Action1<Throwable>() {
+
                     @Override
-                    public void call(Throwable throwable) {
-                        toastE("查询设备数据失败：" + throwable.getMessage());
+                    public void onError(Throwable e) {
+                        toastE("查询设备数据失败：" + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }

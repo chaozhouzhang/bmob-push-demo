@@ -13,6 +13,7 @@ import cn.bmob.v3.exception.BmobException;
 
 /**
  * Created on 17/8/24 13:18
+ * @author zhangchaozhou
  */
 
 public class App extends Application {
