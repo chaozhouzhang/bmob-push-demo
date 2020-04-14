@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
+    buildToolsVersion '29.0.3'
     defaultConfig {
         applicationId "cn.bmob.push"
         minSdkVersion 15
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 103
         versionName "1.0.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -17,6 +18,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    useLibrary 'org.apache.http.legacy'
     // 指定jdk版本
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -26,36 +29,26 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha4', {
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testImplementation 'junit:junit:4.12'
-
-
-    /**
-     * ButterKnife
-     */
-
     implementation 'com.jakewharton:butterknife:10.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
-
-
-
-    implementation 'com.orhanobut:logger:2.1.1'
-    //Bmob的数据服务SDK
-    implementation 'cn.bmob.android:bmob-sdk:3.7.2'
-    //Bmob的消息推送SDK
-    implementation 'cn.bmob.android:bmob-push:1.0.3'
-    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
-    implementation 'androidx.vectordrawable:vectordrawable:1.0.0-beta01'
-    implementation 'com.google.android.material:material:1.0.0-beta01'
-
-
-
-    implementation "io.reactivex.rxjava2:rxjava:2.2.2"
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
-    implementation 'com.squareup.okio:okio:2.1.0'
+    implementation 'com.orhanobut:logger:2.2.0'
+    //1、Bmob的数据服务SDK
+    implementation 'cn.bmob.android:bmob-sdk:3.7.8'
+    implementation "io.reactivex.rxjava2:rxjava:2.2.8"
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'com.squareup.okio:okio:2.2.2'
+    implementation 'com.squareup.okhttp3:okhttp:3.14.1'
     implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
-    implementation 'androidx.core:core:1.0.0+'
+    implementation 'com.google.android.material:material:1.2.0-alpha05'
+    implementation 'androidx.core:core:1.2.0'
+
+    //2、Bmob的消息推送SDK
+    implementation 'cn.bmob.android:bmob-push:1.0.5'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
+    implementation 'com.google.android.material:material:1.1.0'
 }

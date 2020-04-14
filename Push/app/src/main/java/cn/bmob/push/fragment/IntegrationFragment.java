@@ -19,6 +19,7 @@ import cn.bmob.push.ui.LoginActivity;
 import cn.bmob.v3.BmobInstallationManager;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
@@ -78,14 +79,14 @@ public class IntegrationFragment extends BaseFragment {
                             installation.setUser(user);
                             user.setObjectId("");
                             installation.updateObservable()
-                                    .subscribe(new Observer<Void>() {
+                                    .subscribe(new Observer<BmobException>() {
                                         @Override
                                         public void onSubscribe(Disposable d) {
 
                                         }
 
                                         @Override
-                                        public void onNext(Void aVoid) {
+                                        public void onNext(BmobException e) {
 
                                             toastI("更新设备用户信息成功！");
                                             /**
@@ -97,8 +98,8 @@ public class IntegrationFragment extends BaseFragment {
                                         }
 
                                         @Override
-                                        public void onError(Throwable e) {
-                                            toastE("更新设备用户信息失败：" + e.getMessage());
+                                        public void onError(Throwable throwable) {
+                                            toastE("更新设备用户信息失败：" + throwable.getMessage());
                                         }
 
                                         @Override
@@ -110,11 +111,13 @@ public class IntegrationFragment extends BaseFragment {
                         } else {
                             toastE("后台不存在此设备Id的数据，请确认此设备Id是否正确！\n" + id);
                         }
+
+
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-                        toastE("查询设备数据失败：" + e.getMessage());
+                    public void onError(Throwable throwable) {
+                        toastE("查询设备数据失败：" + throwable.getMessage());
                     }
 
                     @Override
